@@ -33,21 +33,38 @@ impl PluginCommand for Search {
                     Box::new(Type::Any), // Replace with more detailed type
                 ),
             )])
-            .optional("uri", SyntaxShape::String, "URI of LDAP server")
-            .optional("binddn", SyntaxShape::String, "Bind DN for authentication")
-            .optional(
+            .named("uri", SyntaxShape::String, "URI of LDAP server", None)
+            .named(
+                "binddn",
+                SyntaxShape::String,
+                "Bind DN for authentication",
+                None,
+            )
+            .named(
                 "password",
                 SyntaxShape::String,
                 "Password for simple authentication",
+                None,
             )
-            .optional("basedn", SyntaxShape::String, "LDAP search base DN")
-            .optional("scope", SyntaxShape::String, "LDAP search scope")
-            .optional("size-limit", SyntaxShape::Number, "LDAP search size limit")
-            .optional("time-limit", SyntaxShape::Number, "LDAP search time limit")
-            .optional(
+            .named("basedn", SyntaxShape::String, "LDAP search base DN", None)
+            .named("scope", SyntaxShape::String, "LDAP search scope", None)
+            .named(
+                "size-limit",
+                SyntaxShape::Number,
+                "LDAP search size limit",
+                None,
+            )
+            .named(
+                "time-limit",
+                SyntaxShape::Number,
+                "LDAP search time limit",
+                None,
+            )
+            .named(
                 "deref-aliases",
                 SyntaxShape::String,
                 "LDAP dereference aliases (never, search, find, always)",
+                None,
             )
             .switch("typesonly", "Only return attribute names", None)
             .required("filter", SyntaxShape::String, "LDAP search filter")
