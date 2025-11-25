@@ -37,9 +37,8 @@ pub(crate) async fn search_impl(
         ListStream::new(
             std::iter::from_fn(move || {
                 tokio::task::block_in_place(|| {
-                    rx.blocking_recv().map(|resp| {
-                        resp.unwrap_or_else(|err| Value::error(err.into(), Span::unknown()))
-                    })
+                    rx.blocking_recv()
+                        .map(|resp| resp.unwrap_or_else(|err| Value::error(err.into(), span)))
                 })
             }),
             Span::unknown(),
