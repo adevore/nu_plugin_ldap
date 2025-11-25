@@ -1,6 +1,6 @@
 [package]
 authors = ["Aaron DeVore <adevore@pdx.edu>"]
-description = "Nu shell plugin for LDAP queries"
+description = "Nushell plugin for LDAP queries"
 repository = "https://github.com/adevore/nu_plugin_ldap"
 name = "nu_plugin_ldap"
 version = "0.1.0"
@@ -18,3 +18,5 @@ bench = false
 ldap3 = { version = "0.12.1", default-features = false, features = ["tls-rustls-ring"] }
 nu-plugin = "0.108.0"
 nu-protocol = { version = "0.108.0", features = ["plugin"] }
+tokio = { version = "1.48.0", features = ["full"] }
+url = "*"

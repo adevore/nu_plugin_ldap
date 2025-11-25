@@ -1,8 +1,7 @@
-use nu_plugin::{EngineInterface, PluginCommand};
+use nu_plugin::{EngineInterface, EvaluatedCall, PluginCommand};
 use nu_protocol::{Category, LabeledError, PipelineData, Signature, SyntaxShape, Type};
 
-use super::helper;
-use super::opts::parse_opts;
+use super::search_impl::search_impl;
 use crate::LdapPlugin;
 
 pub struct Search;
@@ -16,14 +15,14 @@ impl PluginCommand for Search {
 
     fn run(
         &self,
-        _plugin: &Self::Plugin,
-        _engine: &EngineInterface,
-        call: &nu_plugin::EvaluatedCall,
-        _input: PipelineData,
+        plugin: &Self::Plugin,
+        engine: &EngineInterface,
+        call: &EvaluatedCall,
+        input: PipelineData,
     ) -> Result<PipelineData, LabeledError> {
-        let opts = parse_opts(call)?;
-
-        todo!()
+        plugin
+            .main_runtime
+            .block_on(async move { search_impl(plugin, engine, call, input).await })
     }
 
     fn signature(&self) -> nu_protocol::Signature {
@@ -67,7 +66,7 @@ impl PluginCommand for Search {
     fn examples(&self) -> Vec<nu_protocol::Example<'_>> {
         vec![nu_protocol::Example {
             description: "Search for users in the LDAP directory",
-            example: "ldap search '(objectClass=person)'",
+            example: "ldap search '(uid=user)'",
             result: None,
         }]
     }
