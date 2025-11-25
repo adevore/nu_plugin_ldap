@@ -5,6 +5,7 @@ use nu_plugin::EvaluatedCall;
 use nu_protocol::LabeledError;
 use url::Url;
 
+#[derive(Debug)]
 pub(crate) struct ConnectOpts {
     pub uri: Url,
     pub binddn: Option<String>,
@@ -13,6 +14,7 @@ pub(crate) struct ConnectOpts {
     pub connect_timeout: Option<Duration>,
 }
 
+#[derive(Debug)]
 pub(crate) struct SearchOpts {
     pub scope: ldap3::Scope,
     pub filter: String,
@@ -26,6 +28,7 @@ pub(crate) struct SearchOpts {
     pub typesonly: bool,
 }
 
+#[derive(Debug)]
 pub(crate) struct Opts {
     pub connect: ConnectOpts,
     pub search: SearchOpts,
@@ -75,8 +78,8 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
     let connect_timeout = call.get_flag("connect-timeout")?;
     let basedn = call.get_flag("basedn")?.unwrap_or_default();
     let typesonly = call.get_flag("typesonly")?.unwrap_or(false);
-    let filter = call.req(1)?;
-    let attributes = call.rest(2)?;
+    let filter = call.req(0)?;
+    let attributes = call.rest(1)?;
     let connect_opts = ConnectOpts {
         uri,
         binddn,
