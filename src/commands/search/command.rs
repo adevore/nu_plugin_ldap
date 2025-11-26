@@ -1,5 +1,7 @@
 use nu_plugin::{EngineInterface, EvaluatedCall, PluginCommand};
-use nu_protocol::{Category, LabeledError, PipelineData, Signature, SyntaxShape, Type};
+use nu_protocol::{
+    Category, LabeledError, PipelineData, Signature, Span, SyntaxShape, Type, Value, record,
+};
 
 use super::search_impl::search_impl;
 use crate::LdapPlugin;
@@ -86,7 +88,25 @@ impl PluginCommand for Search {
         vec![nu_protocol::Example {
             description: "Search for users in the LDAP directory",
             example: "ldap search '(uid=user)'",
-            result: None,
+            result: Some(Value::list(
+                vec![Value::record(
+                    record! {
+                        "dn" => Value::string("uid=user,ou=people,dc=example,dc=com", Span::unknown()),
+                        "attrs" => Value::list(vec![
+                            Value::record(
+                                record! {
+                                    "uid" => Value::string("user", Span::unknown()),
+                                    "cn" => Value::string("User", Span::unknown()),
+                                    "mail" => Value::string("user@example.com", Span::unknown()),
+                                },
+                                Span::unknown())
+                        ], Span::unknown()),
+                        "bin_attrs" => Value::list(vec![], Span::unknown()),
+                    },
+                    Span::unknown(),
+                )],
+                Span::unknown(),
+            )),
         }]
     }
 }
