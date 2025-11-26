@@ -33,8 +33,8 @@ impl PluginCommand for Search {
                 Type::Nothing,
                 Type::List(Box::new(Type::Record(Box::new([
                     (String::from("dn"), Type::String),
-                    (String::from("attrs"), Type::Any),
-                    (String::from("bin_attrs"), Type::Any),
+                    (String::from("attrs"), Type::record()),
+                    (String::from("bin_attrs"), Type::record()),
                 ])))),
             )])
             .named("uri", SyntaxShape::String, "URI of LDAP server", None)
@@ -95,9 +95,13 @@ impl PluginCommand for Search {
                         "attrs" => Value::list(vec![
                             Value::record(
                                 record! {
-                                    "uid" => Value::string("user", Span::unknown()),
-                                    "cn" => Value::string("User", Span::unknown()),
-                                    "mail" => Value::string("user@example.com", Span::unknown()),
+                                    "uid" => Value::list(vec![Value::string("user", Span::unknown())], Span::unknown()),
+                                    "cn" => Value::list(vec![Value::string("User", Span::unknown())], Span::unknown()),
+                                    "mail" => Value::list(vec![Value::string("user@example.com", Span::unknown())], Span::unknown()),
+                                    "mailLocalAddress" => Value::list(vec![
+                                        Value::string("user@example.com", Span::unknown()),
+                                        Value::string("user.alias@example.com", Span::unknown())
+                                    ], Span::unknown()),
                                 },
                                 Span::unknown())
                         ], Span::unknown()),
