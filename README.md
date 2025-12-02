@@ -31,5 +31,5 @@ The output is a list of records, each with this structure:
 | Attribute | Type                               | Description                     |
 | --------- | ---------------------------------- | ------------------------------- |
 | dn        | string                             | Distinguished Name              |
-| attrs     | list[record[string, list[string]]] | List of attribute values        |
-| bin_attrs | list[record[string, list[bytes]]]  | List of binary attribute values |
+| attrs     | record[list[string]] | List of attribute values        |
+| bin_attrs | record[list[bytes]]  | List of binary attribute values |
