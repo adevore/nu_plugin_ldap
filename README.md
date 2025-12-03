@@ -4,6 +4,9 @@ A [Nushell](https://www.nushell.sh/) plugin for querying LDAP servers. Currently
 just search is supported. Uses streams and paged searches to process large result
 sets efficiently.
 
+Credit to [nu_plugin_dns](https://github.com/dead10ck/nu_plugin_dns) for inspiration
+for how to handle an async Nushell plugin.
+
 ## Usage
 
 ```

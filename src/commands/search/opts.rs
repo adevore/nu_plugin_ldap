@@ -8,8 +8,7 @@ use url::Url;
 #[derive(Debug)]
 pub(crate) struct ConnectOpts {
     pub uri: Url,
-    pub binddn: Option<String>,
-    pub bindpw: Option<String>,
+    pub bind_credentials: Option<(String, String)>,
     pub starttls: bool,
     pub connect_timeout: Option<Duration>,
 }
@@ -74,6 +73,14 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
     let controls = call.get_flag("controls")?;
     let binddn = call.get_flag("binddn")?;
     let bindpw = call.get_flag("password")?;
+    let bind_credentials = match (binddn, bindpw) {
+        (Some(binddn), Some(bindpw)) => Some((binddn, bindpw)),
+        // TODO: Is this valid?
+        (Some(binddn), None) => Some((binddn, "".to_string())),
+        // TODO: Is this valid?
+        (None, Some(bindpw)) => Some(("".to_string(), bindpw)),
+        (None, None) => None,
+    };
     let starttls = call.get_flag("starttls")?.unwrap_or(false);
     let connect_timeout = call.get_flag("connect-timeout")?;
     let basedn = call.get_flag("basedn")?.unwrap_or_default();
@@ -82,8 +89,7 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
     let attributes = call.rest(1)?;
     let connect_opts = ConnectOpts {
         uri,
-        binddn,
-        bindpw,
+        bind_credentials,
         starttls,
         connect_timeout,
     };
