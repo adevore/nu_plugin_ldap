@@ -20,15 +20,25 @@ pub(crate) async fn search_impl(
     let (tx, mut rx) = tokio::sync::mpsc::channel::<Result<Value, LabeledError>>(100usize);
     tokio::spawn(async move {
         // TODO: Handle errors properly
-        let mut search_stream = query_impl(&mut ldap, &opts.search, span).await?;
-        while let Some(result) = search_stream
-            .next()
-            .await
-            .map_err(|err| LabeledError::new(format!("Error fetching search results: {}", err)))?
-        {
-            let entry = SearchEntry::construct(result);
-            let record = shape_entry(&entry)?;
-            tx.send(Ok(record)).await.unwrap();
+        let mut search_stream = query_impl(&mut ldap, &opts.search, span).await.unwrap();
+        loop {
+            match search_stream.next().await {
+                Ok(Some(result)) => {
+                    let entry = SearchEntry::construct(result);
+                    let record = shape_entry(&entry)?;
+                    tx.send(Ok(record)).await.unwrap();
+                }
+                Ok(None) => break,
+                Err(err) => {
+                    tx.send(Err(LabeledError::new(format!(
+                        "Error fetching search results: {}",
+                        err
+                    ))))
+                    .await
+                    .unwrap();
+                    break;
+                }
+            }
         }
         Ok::<(), LabeledError>(())
     });
@@ -74,30 +84,37 @@ fn shape_entry(entry: &SearchEntry) -> Result<Value, LabeledError> {
     let mut record = Record::new();
     record.insert("dn", Value::string(&entry.dn, Span::unknown()));
 
-    // Create alphabetically sorted attributes
-    let mut attrs = BTreeMap::new();
-    for (name, values) in entry.attrs.iter() {
-        let nu_values = values
-            .iter()
-            .map(|s| Value::string(s, Span::unknown()))
-            .collect::<Vec<_>>();
-        attrs.insert(name.clone(), nu_values);
-    }
+    let mut attrs = entry
+        .attrs
+        .iter()
+        .map(|(name, values)| {
+            let nu_values = values
+                .iter()
+                .map(|s| Value::string(s.clone(), Span::unknown()))
+                .collect::<Vec<_>>();
+            (name.clone(), nu_values)
+        })
+        .collect::<Vec<_>>();
+    attrs.sort_unstable_by(|a, b| a.0.cmp(&b.0));
     let attrs_record = attrs
         .into_iter()
         .map(|(name, values)| (name, Value::list(values, Span::unknown())))
         .collect::<Record>();
     record.insert("attrs", Value::record(attrs_record, Span::unknown()));
 
-    // Create alphabetically sorted binary attributes
-    let mut bin_attrs = BTreeMap::new();
-    for (name, values) in entry.bin_attrs.iter() {
-        let nu_values = values
-            .iter()
-            .map(|s| Value::binary(s.clone(), Span::unknown()))
-            .collect::<Vec<_>>();
-        bin_attrs.insert(name.clone(), nu_values);
-    }
+    let mut bin_attrs = entry
+        .bin_attrs
+        .iter()
+        .map(|(name, values)| {
+            let nu_values = values
+                .iter()
+                .map(|s| Value::binary(s.clone(), Span::unknown()))
+                .collect::<Vec<_>>();
+            (name.clone(), nu_values)
+        })
+        .collect::<Vec<_>>();
+    bin_attrs.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+
     let bin_attrs_record = bin_attrs
         .into_iter()
         .map(|(name, values)| (name, Value::list(values, Span::unknown())))
