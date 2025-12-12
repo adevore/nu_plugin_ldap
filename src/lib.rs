@@ -13,6 +13,6 @@ impl Plugin for LdapPlugin {
     }
 
     fn commands(&self) -> Vec<Box<dyn PluginCommand<Plugin = Self>>> {
-        vec![Box::new(Search)]
+        vec![Box::new(Search), Box::new(Table)]
     }
 }

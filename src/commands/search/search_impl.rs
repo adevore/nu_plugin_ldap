@@ -1,5 +1,3 @@
-use std::collections::BTreeMap;
-
 use ldap3::{Ldap, LdapConnAsync, LdapConnSettings, SearchEntry, SearchStream};
 use nu_plugin::{EngineInterface, EvaluatedCall};
 use nu_protocol::{
