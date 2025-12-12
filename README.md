@@ -7,7 +7,7 @@ sets efficiently.
 Credit to [nu_plugin_dns](https://github.com/dead10ck/nu_plugin_dns) for inspiration
 for how to handle an async Nushell plugin.
 
-## Usage
+## `ldap search`
 
 ```
 ldap search [options] <filter> [attributes]...
@@ -27,7 +27,7 @@ ldap search [options] <filter> [attributes]...
 | `--deref-aliases` | string | Dereference aliases (never, find, search, always) |
 | `--typesonly`     |        | Return only attribute types                       |
 
-## Output
+### Output
 
 The output is a list of records, each with this structure:
 
@@ -36,3 +36,19 @@ The output is a list of records, each with this structure:
 | dn        | string                             | Distinguished Name              |
 | attrs     | record[list[string]] | List of attribute values        |
 | bin_attrs | record[list[bytes]]  | List of binary attribute values |
+
+## `ldap table`
+
+```
+ldap table <spec>...
+```
+
+`spec` is one of:
+
+- `dn`: extract dn as a single value
+- `<attribute>`: extract single value attribute, default empty string
+- `<attribute>+`: extract multivalue attribute, default empty list
+
+### Output
+
+Output will be a list of records formatted to the specs.
