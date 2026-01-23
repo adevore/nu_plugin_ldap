@@ -21,8 +21,6 @@ pub(crate) struct SearchOpts {
     pub size_limit: Option<i32>,
     pub time_limit: Option<i32>,
     pub deref_aliases: DerefAliases,
-    pub extensions: Option<String>,
-    pub controls: Option<String>,
     pub basedn: String,
     pub typesonly: bool,
 }
@@ -41,8 +39,7 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
         .map_err(|err| LabeledError::new(format!("Invalid URI {err}")))?;
     let scope = match call
         .get_flag::<String>("scope")?
-        .as_ref()
-        .map(|s| s.as_str())
+        .as_deref()
     {
         Some("base") => ldap3::Scope::Base,
         Some("one") => ldap3::Scope::OneLevel,
@@ -55,8 +52,7 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
     let time_limit = call.get_flag("time-limit")?;
     let deref_aliases = match call
         .get_flag::<String>("deref-aliases")?
-        .as_ref()
-        .map(|s| s.as_str())
+        .as_deref()
     {
         Some("never") | None => DerefAliases::Never,
         Some("always") => DerefAliases::Always,
@@ -69,8 +65,6 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
             )));
         }
     };
-    let extensions = call.get_flag("extensions")?;
-    let controls = call.get_flag("controls")?;
     let binddn = call.get_flag("binddn")?;
     let bindpw = call.get_flag("password")?;
     let bind_credentials = match (binddn, bindpw) {
@@ -100,8 +94,6 @@ pub(crate) fn extract_opts(call: &EvaluatedCall) -> Result<Opts, LabeledError> {
         size_limit,
         time_limit,
         deref_aliases,
-        extensions,
-        controls,
         basedn,
         typesonly,
     };

@@ -142,7 +142,7 @@ fn handle_list_stream(list_stream: ListStream, attr_getters: Vec<AttrGetter>) ->
                 if let Ok(record) = value.as_record() {
                     match reshape_record(record, &attr_getters) {
                         Ok(record) => record,
-                        Err(err) => Value::error(err.into(), Span::unknown()),
+                        Err(err) => Value::error(err, Span::unknown()),
                     }
                 } else {
                     Value::error(

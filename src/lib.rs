@@ -1,7 +1,6 @@
 use nu_plugin::{Plugin, PluginCommand};
 
 mod commands;
-mod config;
 mod ldap;
 
 use commands::*;

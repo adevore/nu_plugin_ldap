@@ -1,11 +1,11 @@
 use ldap3::{Ldap, LdapConnAsync, LdapConnSettings, SearchEntry, SearchStream};
 use nu_plugin::{EngineInterface, EvaluatedCall};
 use nu_protocol::{
-    LabeledError, ListStream, PipelineData, Record, ShellError, Signals, Span, Value,
+    LabeledError, ListStream, PipelineData, Record, Signals, Span, Value,
 };
 
 use tracing::instrument;
-use tracing::{debug, error, info, trace, warn};
+use tracing::{info, trace, warn};
 
 use super::opts::{ConnectOpts, SearchOpts, extract_opts};
 use crate::LdapPlugin;

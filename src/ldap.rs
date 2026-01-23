@@ -37,3 +37,10 @@ impl LdapPlugin {
         self.tasks.wait().await;
     }
 }
+
+
+impl Default for LdapPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
