@@ -6,7 +6,6 @@ use nu_protocol::{
 
 use tracing::instrument;
 use tracing::{debug, error, info, trace, warn};
-use tracing_subscriber::prelude::*;
 
 use super::opts::{ConnectOpts, SearchOpts, extract_opts};
 use crate::LdapPlugin;
