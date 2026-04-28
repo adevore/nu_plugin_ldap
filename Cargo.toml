@@ -19,8 +19,8 @@ bench = false
 
 [dependencies]
 ldap3 = { version = "0.12.1", default-features = false, features = ["tls-rustls-ring"] }
-nu-plugin = "0.110.0"
-nu-protocol = { version = "0.110.0", features = ["plugin"] }
+nu-plugin = "0.112.2"
+nu-protocol = { version = "0.112.2", features = ["plugin"] }
 tokio = { version = "1.49.0", features = ["full"] }
 tokio-util = { version = "0.7.17", features = ["rt", "tracing"] }
 tracing = { version = "0.1.44", features = ["std"] }
