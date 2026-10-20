@@ -43,11 +43,17 @@ The output is a list of records, each with this structure:
 ldap table <spec>...
 ```
 
+Transform an LDAP search into a flatter table
+
 `spec` is one of:
 
 - `dn`: extract dn as a single value
 - `<attribute>`: extract single value attribute, default empty string
 - `<attribute>+`: extract multivalue attribute, default empty list
+
+### Input
+
+The results from an invocation of `ldap search`.
 
 ### Output
 
