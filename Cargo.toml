@@ -5,6 +5,7 @@ repository = "https://github.com/adevore/nu_plugin_ldap"
 name = "nu_plugin_ldap"
 version = "0.1.1"
 edition = "2024"
+rust-version = "1.97.1"
 license = "MIT"
 readme = "README.md"
 keywords = ["ldap", "nu", "nushell", "plugin"]
@@ -21,8 +22,8 @@ bench = false
 ldap3 = { version = "0.12.1", default-features = false, features = ["tls-rustls-ring"] }
 nu-plugin = "0.116.1"
 nu-protocol = { version = "0.116.1", features = ["plugin"] }
-tokio = { version = "1.49.0", features = ["full"] }
-tokio-util = { version = "0.7.17", features = ["rt", "tracing"] }
+tokio = { version = "1.54.0", features = ["full"] }
+tokio-util = { version = "0.7.20", features = ["rt", "tracing"] }
 tracing = { version = "0.1.44", features = ["std"] }
-tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 url = "2.5.8"
