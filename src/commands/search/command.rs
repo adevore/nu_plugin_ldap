@@ -1,6 +1,7 @@
 use nu_plugin::{EngineInterface, EvaluatedCall, PluginCommand};
 use nu_protocol::{
-    Category, LabeledError, PipelineData, Signature, Span, SyntaxShape, Type, Value, record,
+    Category, CollectionColumns, LabeledError, PipelineData, Signature, Span, SyntaxShape, Type,
+    Value, record,
 };
 
 use super::search_impl::search_impl;
@@ -31,7 +32,7 @@ impl PluginCommand for Search {
         Signature::build(PluginCommand::name(self))
             .input_output_types(vec![(
                 Type::Nothing,
-                Type::List(Box::new(Type::Record(Box::new([
+                Type::List(Box::new(Type::Record(CollectionColumns::from(vec![
                     (String::from("dn"), Type::String),
                     (String::from("attrs"), Type::record()),
                     (String::from("bin_attrs"), Type::record()),

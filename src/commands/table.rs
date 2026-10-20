@@ -1,7 +1,7 @@
 use nu_plugin::{EngineInterface, EvaluatedCall, PluginCommand};
 use nu_protocol::{
-    LabeledError, ListStream, PipelineData, Record, ShellError, Signals, Signature, Span,
-    SyntaxShape, Type, Value,
+    CollectionColumns, LabeledError, ListStream, PipelineData, Record, ShellError, Signals,
+    Signature, Span, SyntaxShape, Type, Value,
 };
 
 use crate::LdapPlugin;
@@ -39,7 +39,7 @@ impl PluginCommand for Table {
     fn signature(&self) -> nu_protocol::Signature {
         Signature::build(PluginCommand::name(self))
             .input_output_types(vec![(
-                Type::List(Box::new(Type::Record(Box::new([
+                Type::List(Box::new(Type::Record(CollectionColumns::from(vec![
                     (String::from("dn"), Type::String),
                     (String::from("attrs"), Type::record()),
                     (String::from("bin_attrs"), Type::record()),
